@@ -11,13 +11,14 @@ describe('API', function() {
 
     it('GET /', function(done) {
         request(app)
-            .get('/393939')
-            .expect(200, done);
+            .get('/')
+            .expect(404, done);
     });
 
     it('POST /', function(done) {
         request(app)
             .post('/')
+            .attach('photo', 'test/fixtures/testphoto')
             .expect(200, done);
     });
 

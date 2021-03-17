@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  cassandra:
+    image: cassandra
+    ports:
+      - 7000:7000
+      - 9042:9042
+  setup:
+    image: cassandra
+    depends_on:
+      - cassandra
+    restart: "no"
+    entrypoint: [ "bash", "-c", "sleep 20 && cqlsh cassandra < /models/schema.cql" ]
+    volumes:
+      - ./cassandra:/models

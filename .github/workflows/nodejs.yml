@@ -12,5 +12,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+    - name: Use Node.js 15.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '15.x'
+    - run: git config --global url."https://${{ secrets.ACCESS_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
     - run: npm install
+    - run: docker-compose up -d
+    - run: sleep 30
     - run: npm test
+    - run: docker-compose down
