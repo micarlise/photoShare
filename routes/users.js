@@ -21,7 +21,24 @@ function createUser(req, res) {
     });
 }
 
+function getUser(req, res) {
+
+    userModel.getUser(req.params.user)
+    .then((user) => {
+
+        if (!user) {
+            res.status(404);
+            res.end();
+            return;
+        }
+
+        res.send(user);
+    });
+}
+
 let userRouter = express.Router();
+
+userRouter.get('/:user', getUser);
 
 userRouter.post('/', 
     bodyParser.json(),

@@ -23,6 +23,12 @@ describe('/users', function() {
             .send({username: 'testuser', email: 't@user.com'})
             .expect(200, done);
     });
+
+    it('GET / 200', function(done) {
+        request(app)
+            .get('/users/testuser')
+            .expect(200, done);
+    });
 });
 
 describe('/photos', function() {

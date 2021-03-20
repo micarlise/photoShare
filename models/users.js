@@ -8,7 +8,8 @@ const client = new cassandra.Client({
 });
 
 const queries = {
-    createUser: 'INSERT INTO users (username, email) VALUES (?, ?)'
+    createUser: 'INSERT INTO users (username, email) VALUES (?, ?)',
+    getUser: 'SELECT * FROM users WHERE username = ?'
 };
 
 function createUser(username, email) {
@@ -17,4 +18,21 @@ function createUser(username, email) {
     return client.execute(queries.createUser, params, {prepare: true});
 }
 
-module.exports = { createUser }
+function getUser(username) {
+    
+    if (!username) {
+        return
+    }
+
+    return client.execute(queries.getUser, [username], {prepare: true})
+    .then(res => {
+
+        if (res.rows.length == 0) {
+            return 
+        }
+
+        return res.rows[0];
+    });
+}
+
+module.exports = { createUser, getUser }
