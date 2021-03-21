@@ -8,19 +8,21 @@ const client = new cassandra.Client({
 });
 
 const queries = {
-    uploadPhoto: 'INSERT INTO photos (id, contentkey) VALUES (?, ?) IF NOT EXISTS',
-    getPhoto: 'SELECT contentkey FROM photos WHERE id = ?',
-    deletePhoto: 'DELETE FROM photos where id = ?'
+    uploadPhoto: 'INSERT INTO photos (username, id, contentkey) VALUES (?, ?, ?) IF NOT EXISTS',
+    getPhoto: 'SELECT contentkey FROM photos WHERE user = ? AND id = ?', 
+    deletePhoto: 'DELETE FROM photos where user = ? AND id = ?'
 };
 
-function uploadPhoto(id, contentkey) {
-    params = [id, contentkey];
+function uploadPhoto(user, id, contentkey) {
+    params = [user, id, contentkey];
 
     return client.execute(queries.uploadPhoto, params, {prepare: true});
 }
 
-function getPhoto(id) {
-    return client.execute(queries.getPhoto, [id], {prepare: true})
+function getPhoto(user, id) {
+    params = [user, id]
+
+    return client.execute(queries.getPhoto, params, {prepare: true})
     .then((response) => {
         if (response.rows.length == 0) {
             return
@@ -30,8 +32,10 @@ function getPhoto(id) {
     });
 }
 
-function deletePhoto(id) {
-    return client.execute(queries.deletePhoto, [id], {prepare: true});
+function deletePhoto(user, id) {
+    params = [user, id]
+
+    return client.execute(queries.deletePhoto, params, {prepare: true});
 }
 
 module.exports = { uploadPhoto, getPhoto, deletePhoto }

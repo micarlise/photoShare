@@ -22,7 +22,7 @@ function uploadPhoto(req, res) {
 
     keygen(8)
     .then(id => {
-        photoModel.uploadPhoto(id, contentkey)
+        photoModel.uploadPhoto(req.params.user, id, contentkey)
         .then(() => {
             res.status(200);
             res.send(id + '\n');
@@ -38,7 +38,7 @@ function deletePhoto(req, res) {
 
 function getPhoto(req, res) {
 
-    photoModel.getPhoto(req.params.photoid)
+    photoModel.getPhoto(req.params.user, req.params.photoid)
     .then((contentkey) => {
         if (contentkey) {
             let pathPrefix = path.join(__dirname, '../uploads');
@@ -53,14 +53,14 @@ function getPhoto(req, res) {
 let upload = multer({dest: path.join(__dirname, '../uploads') });
 let photoRouter = express.Router();
 
-photoRouter.get('/:photoid', getPhoto);
+photoRouter.get('/:user/:photoid', getPhoto);
 
-photoRouter.post('/', 
+photoRouter.post('/:user', 
     bodyParser.json(),
     upload.single('photo'),
     uploadPhoto
 );
 
-photoRouter.delete('/:photoid', deletePhoto);
+photoRouter.delete('/:user/:photoid', deletePhoto);
 
 module.exports = photoRouter;
