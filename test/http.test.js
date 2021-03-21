@@ -35,20 +35,20 @@ describe('/photos', function() {
 
     it('GET / 404', function(done) {
         request(app)
-            .get('/photos')
+            .get('/photos/testuser')
             .expect(404, done);
     });
 
     it('POST / 200', function(done) {
         request(app)
-            .post('/photos')
+            .post('/photos/testuser')
             .attach('photo', 'test/fixtures/testphoto')
             .expect(200, done);
     });
 
     it('DELETE / 200', function(done) {
         request(app)
-            .delete('/photos/393939')
+            .delete('/photos/testuser/393939')
             .expect(200, done);
     });
 });
