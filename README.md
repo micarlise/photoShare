@@ -1,4 +1,5 @@
-# photoShare
+# photoShare ![unit
+tests](https://github.com/micarlise/photoShare/actions/workflows/nodejs.yml/badge.svg)
 
 ## Running the server
 
