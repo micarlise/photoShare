@@ -65,10 +65,4 @@ describe('/photos', function() {
             .attach('photo', 'test/fixtures/testphoto')
             .expect(200, done);
     });
-
-    it('DELETE / 200', function(done) {
-        request(app)
-            .delete('/photos/testuser/393939')
-            .expect(200, done);
-    });
 });

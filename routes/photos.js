@@ -30,15 +30,9 @@ function uploadPhoto(req, res) {
     });
 }
 
-function deletePhoto(req, res) {
-    // delete from storage directory
-    // remove metedata
-    res.send('delete photo');
-}
-
 function getPhoto(req, res) {
 
-    photoModel.getPhoto(req.params.user, req.params.photoid)
+    photoModel.getPhoto(req.params.photoId)
     .then((contentkey) => {
         if (contentkey) {
             let pathPrefix = path.join(__dirname, '../uploads');
@@ -53,14 +47,12 @@ function getPhoto(req, res) {
 let upload = multer({dest: path.join(__dirname, '../uploads') });
 let photoRouter = express.Router();
 
-photoRouter.get('/:user/:photoid', getPhoto);
+photoRouter.get('/:photoId', getPhoto);
 
 photoRouter.post('/:user', 
     bodyParser.json(),
     upload.single('photo'),
     uploadPhoto
 );
-
-photoRouter.delete('/:user/:photoid', deletePhoto);
 
 module.exports = photoRouter;
