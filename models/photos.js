@@ -7,22 +7,28 @@ const client = new cassandra.Client({
     keyspace: 'photoshare'
 });
 
-const queries = {
-    uploadPhoto: 'INSERT INTO photos (username, id, contentkey) VALUES (?, ?, ?) IF NOT EXISTS',
-    getPhoto: 'SELECT contentkey FROM photos WHERE user = ? AND id = ?', 
-    deletePhoto: 'DELETE FROM photos where user = ? AND id = ?'
+const user_photos_queries = {
+    insert: 'INSERT INTO user_photos (username, id) VALUES (?, ?)',
 };
 
-function uploadPhoto(user, id, contentkey) {
-    params = [user, id, contentkey];
+const photos_queries = {
+    insert: 'INSERT INTO photos (id, contentkey) VALUES (?, ?)',
+    get: 'SELECT contentkey FROM photos WHERE id = ?',
+};
 
-    return client.execute(queries.uploadPhoto, params, {prepare: true});
+function uploadPhoto(user, photoId, contentkey) {
+
+    const queries = [
+        { query: user_photos_queries.insert, params: [user, photoId] },
+        { query: photos_queries.insert, params: [photoId, contentkey] }
+    ];
+
+    return client.batch(queries, {prepare: true});
 }
 
-function getPhoto(user, id) {
-    params = [user, id]
+function getPhoto(photoId) {
 
-    return client.execute(queries.getPhoto, params, {prepare: true})
+    return client.execute(photos_queries.get, [photoId], {prepare: true})
     .then((response) => {
         if (response.rows.length == 0) {
             return
@@ -32,10 +38,4 @@ function getPhoto(user, id) {
     });
 }
 
-function deletePhoto(user, id) {
-    params = [user, id]
-
-    return client.execute(queries.deletePhoto, params, {prepare: true});
-}
-
-module.exports = { uploadPhoto, getPhoto, deletePhoto }
+module.exports = { uploadPhoto, getPhoto }
