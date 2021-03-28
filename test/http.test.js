@@ -59,6 +59,14 @@ describe('/photos', function() {
             .expect(404, done);
     });
 
+    it('POST / 200 with title', function(done) {
+        request(app)
+            .post('/photos/testuser')
+            .field('title', 'test photo')
+            .attach('photo', 'test/fixtures/testphoto')
+            .expect(200, done);
+    });
+
     it('POST / 200', function(done) {
         request(app)
             .post('/photos/testuser')

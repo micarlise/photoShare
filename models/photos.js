@@ -12,15 +12,15 @@ const user_photos_queries = {
 };
 
 const photos_queries = {
-    insert: 'INSERT INTO photos (id, contentkey) VALUES (?, ?)',
+    insert: 'INSERT INTO photos (id, contentkey, title) VALUES (?, ?, ?)',
     get: 'SELECT contentkey FROM photos WHERE id = ?',
 };
 
-function uploadPhoto(user, photoId, contentkey) {
+function uploadPhoto(user, photoId, contentkey, title) {
 
     const queries = [
         { query: user_photos_queries.insert, params: [user, photoId] },
-        { query: photos_queries.insert, params: [photoId, contentkey] }
+        { query: photos_queries.insert, params: [photoId, contentkey, title] }
     ];
 
     return client.batch(queries, {prepare: true});

@@ -17,12 +17,13 @@ function uploadPhoto(req, res) {
         res.end();
         return;
     }
-
+    
+    let title = req.body.title || "";
     let contentkey = req.file.filename;
 
     keygen(8)
     .then(id => {
-        photoModel.uploadPhoto(req.params.user, id, contentkey)
+        photoModel.uploadPhoto(req.params.user, id, contentkey, title)
         .then(() => {
             res.status(200);
             res.send(id + '\n');
