@@ -1,18 +1,22 @@
-version: "3.3"
+version: "3.4"
 services:
   elasticsearch:
     image: elasticsearch:7.11.2
     ports:
       - 9200:9200
-      - 9300:9300
     environment:
       - discovery.type=single-node
   cassandra:
     image: cassandra
     ports:
-      - 7000:7000
       - 9042:9042
-  setup:
+  setup_es:
+    image: micarlise/container-tools:base
+    depends_on:
+      - elasticsearch
+    restart: "no"
+    command: [ "wait-for-it.sh", "elasticsearch:9200", "--", "curl", "-X", "PUT", "elasticsearch:9200/photos" ]
+  setup_cassy:
     image: cassandra
     depends_on:
       - cassandra
