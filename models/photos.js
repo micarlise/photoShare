@@ -1,10 +1,15 @@
 
 const cassandra = require('cassandra-driver');
+const elasticsearch = require('@elastic/elasticsearch');
 
 const client = new cassandra.Client({
     contactPoints: ['0.0.0.0'],
     localDataCenter: 'datacenter1',
     keyspace: 'photoshare'
+});
+
+const ESclient = new elasticsearch.Client({
+    node: 'http://localhost:9200'
 });
 
 const user_photos_queries = {
@@ -23,7 +28,18 @@ function uploadPhoto(user, photoId, contentkey, title) {
         { query: photos_queries.insert, params: [photoId, contentkey, title] }
     ];
 
-    return client.batch(queries, {prepare: true});
+    const indexObj = {
+        index: 'photos',
+        body: {
+            id: photoId,
+            title: title
+        }
+    };
+
+    return client.batch(queries, {prepare: true})
+    .then(() => {
+        ESclient.index(indexObj);
+    });
 }
 
 function getPhoto(photoId) {
