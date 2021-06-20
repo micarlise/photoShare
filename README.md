@@ -1,5 +1,8 @@
 # photoShare ![unit tests](https://github.com/micarlise/photoShare/actions/workflows/nodejs.yml/badge.svg)
 
+Create users, follow/unfollow users, and upload/download photos to a users
+account.
+
 ## Running the server
 
 **starting the servers**
